@@ -5,7 +5,6 @@
 
  - Download Dataset via kaggle API or manually from [KAGGLE](https://www.kaggle.com/datasets/andrewmvd/car-plate-detection)
  - Follow the instructions for Downloading via [Kaggle API](https://www.kaggle.com/docs/api)
- 
- <img src="https://i.imgur.com/ox51Tfv.png" width="1200px" height=50px/>
+ - Run `kaggle datasets download -d andrewmvd/car-plate-detection` in the terminal
  
  
