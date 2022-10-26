@@ -14,6 +14,6 @@
 ## Step 3: Training and Detection
 
 - Upload file `2.Colab_Training_Detection_ANPR_and_EasyOCR.ipynb` in Google Colaboratory
-- Remember to Upload prepared dataset when running `2.Colab_Training_Detection_ANPR_and_EasyOCR.ipynb`
+- Remember to Upload `archive.tar` file of prepared dataset when running `2.Colab_Training_Detection_ANPR_and_EasyOCR.ipynb`
  
  
