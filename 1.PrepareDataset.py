@@ -134,15 +134,16 @@ def main():
     print('Images in train dir:', len(os.listdir(trainPath))/2)
     print('Images in test dir:', len(os.listdir(testPath))/2)
     
+    #Compressing
+    print("Compressing....................")
     ARCHIVE_PATH = os.path.join('dataset', 'archive.tar.gz')
     testPath = os.path.join('dataset', 'images_with_annotations', 'test')
     trainPath = os.path.join('dataset', 'images_with_annotations', 'train')
     
-    print("Compressing....................")
     with tarfile.open(ARCHIVE_PATH, "w:gz") as tarhandle:
-      for root, dirs, files in os.walk(IMAGES_PATH):
-         for f in files:
-            tarhandle.add(os.path.join(root, f))
+        tarhandle.add(testPath)
+        tarhandle.add(trainPath)
+                
     
     print("Finished........................")
     
