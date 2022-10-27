@@ -13,7 +13,7 @@
 
 ## Step 3: Training and Detection
 
-- Upload file `2.Colab_Training_Detection_ANPR_and_EasyOCR.ipynb` in Google Colaboratory
-- Remember to Upload `archive.tar` file of prepared dataset in the step 2 when running `2.Colab_Training_Detection_ANPR_and_EasyOCR.ipynb`
+- Upload file `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in Google Colaboratory
+- Remember to Upload `archive.tar` file of prepared dataset in the step 2 when running `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in the directory `Tensorflow/workspace/images`
  
  
