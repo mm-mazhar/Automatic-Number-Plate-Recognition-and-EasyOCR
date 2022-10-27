@@ -16,6 +16,7 @@
 - Upload file `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in Google Colaboratory
 - Remember to Upload `archive.tar` file of prepared dataset in the step 2 when running `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in the directory `Tensorflow/workspace/images`
  <table style="width:100%">
+ Click on the image to see full view.
   <tr>
     <td><img src="https://i.imgur.com/9xqhmps.png" width="500px" height=225px/></td>
     <td><img src="https://i.imgur.com/wVvrsVv.png" width="500px" height=225px/></td>
