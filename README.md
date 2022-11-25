@@ -18,10 +18,10 @@
  <table style="width:100%">
  Click on the image to see full view.
   <tr>
-    <td><img src="https://i.imgur.com/9xqhmps.png" width="500px" height=225px/></td>
-    <td><img src="https://i.imgur.com/wVvrsVv.png" width="500px" height=225px/></td>
-    <td><img src="https://i.imgur.com/lPeUea7.png" width="500px" height=225px/></td>
-   <td><img src="https://i.imgur.com/rhOMFNk.png" width="500px" height=225px/></td>
+    <td><img src="https://i.imgur.com/9xqhmps.png" width="500px" height=150px/></td>
+    <td><img src="https://i.imgur.com/wVvrsVv.png" width="500px" height=150px/></td>
+    <td><img src="https://i.imgur.com/lPeUea7.png" width="500px" height=150px/></td>
+   <td><img src="https://i.imgur.com/rhOMFNk.png" width="500px" height=150px/></td>
    </tr>
 </table>
  
