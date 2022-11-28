@@ -15,8 +15,9 @@
 
 - Upload file `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in Google Colaboratory
 - Remember to Upload `archive.tar` file of prepared dataset in the step 2 when running `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in the directory `Tensorflow/workspace/images`
-- Note down the latest checkpoint in the folder `Tensorflow\workspace\models\CUSTOM_MODEL_NAME\` e.g. `ckpt-100`. This will be required to enter in scripts `3.DetectFromImage_EasyOCR.py`, `3.DetectFromImage_EasyOCR.py`, `3.DetectFromImage_EasyOCR`, `app.py` where `LOAD_CHECKPOINT = 'ckpt-101'`
-- Download the compressed file of trained model
+- Note down the latest checkpoint in the folder `Tensorflow\workspace\models\CUSTOM_MODEL_NAME\` e.g. `ckpt-100`. This will be required to enter in scripts `3.DetectFromImage_EasyOCR.py`, `4.DetectFromRealTimeFeed_EasyOCR.py`, `5.DetectFromVideos_EasyOCR.py`, `app.py` where `LOAD_CHECKPOINT = 'ckpt-101'`
+- Download the compressed file of trained model in the project folder and uncompress it multiple times.
+- Note: `3.DetectFromImage_EasyOCR.py`, `4.DetectFromRealTimeFeed_EasyOCR.py`, `5.DetectFromVideos_EasyOCR.py` these are optional files.
  
 ## Step 4: Run the Streamlit UI
  - Run `streamlit run app.py`
