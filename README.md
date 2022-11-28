@@ -15,14 +15,14 @@
 
 - Upload file `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in Google Colaboratory
 - Remember to Upload `archive.tar` file of prepared dataset in the step 2 when running `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in the directory `Tensorflow/workspace/images`
- <table style="width:100%">
 - Note down the latest checkpoint in `Tensorflow\workspace\models\CUSTOM_MODEL_NAME\` e.g. `\Tensorflow\workspace\models\my_ssd_mobnet`. This will be required to enter in scripts `3.DetectFromImage_EasyOCR.py`, `3.DetectFromImage_EasyOCR.py`, `3.DetectFromImage_EasyOCR`, `app.py`
 - Download the compressed file of trained model
-
+ 
 ## Step 4: Run the Streamlit UI
  - Run `streamlit run app.py`
  
  Click on the image to see full view.
+ <table style="width:100%">
   <tr>
     <td><img src="https://i.imgur.com/9xqhmps.png" width="500px" height=150px/></td>
     <td><img src="https://i.imgur.com/wVvrsVv.png" width="500px" height=150px/></td>
