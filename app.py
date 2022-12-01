@@ -5,7 +5,6 @@ print("Starting.................................................................
 print("Importing Necessary Libraries\n")
 
 import streamlit as st
-from streamlit_webrtc import webrtc_streamer, RTCConfiguration, WebRtcMode, VideoTransformerBase
 import tempfile
 import av
 import os
@@ -69,24 +68,26 @@ detection_threshold = st.sidebar.slider('OCR Detection Threshold', min_value = 0
 LOAD_CHECKPOINT = 'ckpt-101'
 #################### /Parameters to setup ########################################
 
+outputfolderPaths = {
+    "folderImages" : os.path.join(".", "output", "Detection_From_Images"),
+    "folderRealTime" : os.path.join(".", "output", "Detection_From_RealTimeFeed"),
+    "folderVideos" : os.path.join(".", "output", "Detection_From_Videos"),
+}
 
-folderImages = os.path.join(".", "output", "Detection_From_Images")
-folderRealTime = folderToZip1 = os.path.join(".", "output", "Detection_From_RealTimeFeed")
-folderVideos = os.path.join(".", "output", "Detection_From_Videos")
+ZipfilesPaths = {
+    "detectFromImagesZipFile" : os.path.join(".", "output", "Detection_From_Images.zip"),
+    "detectFromRealTimeFeedZipFile" : os.path.join(".", "output", "Detection_From_RealTimeFeed.zip"),
+    "detectFromVideosZipFile" : os.path.join(".", "output", "Detection_From_Videos.zip"),
+}
 
-detectFromImagesZipFile = os.path.join(".", "output", "Detection_From_Images.zip")
-detectFromRealTimeFeedZipFile = os.path.join(".", "output", "Detection_From_RealTimeFeed.zip")
-detectFromVideosZipFile = os.path.join(".", "output", "Detection_From_Videos.zip")
-
+for path in ZipfilesPaths.values():
+    if os.path.exists(path):
+        os.remove(path)
 
 DEMO_VIDEO = "./samples/sampleVideo0.mp4"
 # DEMO_VIDEO = "./samples/sampleVideo1.mp4"
 # DEMO_VIDEO = "./samples/sampleVideo2.mp4"
 DEMO_PIC = "./samples/Cars3.png"
-
-RTC_CONFIGURATION = RTCConfiguration(
-    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-)
 
 CUSTOM_MODEL_NAME = 'my_ssd_mobnet' 
 LABEL_MAP_NAME = 'label_map.pbtxt'
@@ -124,38 +125,6 @@ ckpt.restore(os.path.join(paths['CHECKPOINT_PATH'], LOAD_CHECKPOINT)).expect_par
 category_index = label_map_util.create_category_index_from_labelmap(files['LABELMAP'])
 
 ################### DEFINE FUNCTIONS #######s##################################
-
-@st.cache()
-def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
-    # initialize the dimensions of the image to be resized and
-    # grab the image size
-    dim = None
-    (h, w) = image.shape[:2]
-
-    # if both the width and height are None, then return the
-    # original image
-    if width is None and height is None:
-        return image
-
-    # check to see if the width is None
-    if width is None:
-        # calculate the ratio of the height and construct the
-        # dimensions
-        r = height / float(h)
-        dim = (int(w * r), height)
-
-    # otherwise, the height is None
-    else:
-        # calculate the ratio of the width and construct the
-        # dimensions
-        r = width / float(w)
-        dim = (width, int(h * r))
-
-    # resize the image
-    resized = cv2.resize(image, dim, interpolation=inter)
-
-    # return the resized image
-    return resized
 
 ############ Detections #########################
 
@@ -269,8 +238,7 @@ def main():
         #csv_filename_images = os.path.join(folderImages, 'Detection_From_Images.csv')
         csv_filename_images = './output/Detection_From_Images/Detection_From_Images.csv'
         
-        ###################### Image File Upload ######################################
-        
+        ######### Image File Upload ###########################        
         uploaded_file = st.file_uploader("Choose an image file", type = ["jpg", "png"])
 
         if uploaded_file is not None:
@@ -280,14 +248,15 @@ def main():
             img = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
             #resized = cv2.resize(img,(224, 224))
             # Now do something with the image! For example, let's display it:
+            st.sidebar.text("Uploaded Pic")
             st.sidebar.image(img, channels = "RGB")
         else:
             img = cv2.imread(DEMO_PIC)
-            st.sidebar.text("Uploaded/Default Pic")
+            st.sidebar.text("DEMO Pic")
             st.sidebar.image(img, channels = "RGB")
             #st.info("Upload an Image")
 
-        ###################### Detections And OCR #############################################
+        ########## Detections And OCR #######################
         
         if st.button('Detect'):
             st.markdown("## Output")
@@ -309,7 +278,7 @@ def main():
             with st.spinner(text = 'In progress..............'):
                 try:
                     text, region, roi, boxes, scores, classes = ocr_it(image_np_with_detections, detections, detection_threshold, region_threshold)
-                    save_results(text, region, roi, boxes, scores, classes, csv_filename_images, folderImages)
+                    save_results(text, region, roi, boxes, scores, classes, csv_filename_images, outputfolderPaths["folderImages"])
                     #st.write(text, region)
                     
                     
@@ -338,13 +307,13 @@ def main():
             try:
                 with st.spinner("Please Wait....."):
                     # Zip and download
-                    zipObj = ZipFile(detectFromImagesZipFile, 'w')
+                    zipObj = ZipFile(ZipfilesPaths["detectFromImagesZipFile"], 'w')
                     if zipObj is not None:
                         # Add multiple files to the zip
-                        files = os.listdir(folderImages)
+                        files = os.listdir(outputfolderPaths["folderImages"])
                         #print("folder Images:", folderImages)
                         for filename in files:
-                            eachFile = os.path.join(folderImages, filename)
+                            eachFile = os.path.join(outputfolderPaths["folderImages"], filename)
                             zipObj.write(eachFile)
                         zipObj.close()
             except Exception as e:
@@ -352,7 +321,7 @@ def main():
                 st.error(e)
             
             try:
-                with open(detectFromImagesZipFile, 'rb') as f:
+                with open(ZipfilesPaths["detectFromImagesZipFile"], 'rb') as f:
                     st.sidebar.download_button('Download (.zip) Img2Text', f, file_name = 'Detection_From_Images.zip')
             except Exception as e:
                 print(e)
@@ -360,9 +329,10 @@ def main():
                 
     if choice == "Detect From Live Feed":
         
-        selectedCam = st.sidebar.selectbox("Select Camera", ("Use WebCam", "User Other Camera"), index = 0)
+        ######### Select and capture Camera #################
+        selectedCam = st.sidebar.selectbox("Select Camera", ("Use WebCam", "Use Other Camera"), index = 0)
         
-        if selectedCam == "User Other Camera":
+        if selectedCam == "Use Other Camera":
             selectedCam = int(1)
         else:
             selectedCam = int(0)
@@ -379,6 +349,8 @@ def main():
         print("FPS Input: ",fps_input, "\n")
         
         startStopCam = st.checkbox("Record/Stop")
+        
+        ########### Detections And OCR #####################
          
         if startStopCam:
             st.info("Recording in Progress....")
@@ -388,9 +360,9 @@ def main():
             fps = 0
             
             #filename = './output/RealTimeFeed/{}.mp4'.format(uuid.uuid1())
-            realTimeVideofilename = os.path.join(folderRealTime, 'RealTimeFeed.mp4')
+            realTimeVideofilename = os.path.join(outputfolderPaths["folderRealTime"], 'RealTimeFeed.mp4')
             #realTimeVideofilename = './output/Detection_From_RealTimeFeed/RealTimeFeed.mp4'
-            csv_filename_RealTime = os.path.join(folderRealTime, 'Detection_From_RealTime.csv')
+            csv_filename_RealTime = os.path.join(outputfolderPaths["folderRealTime"], 'Detection_From_RealTime.csv')
             #csv_filename_RealTime = './output/Detection_From_RealTimeFeed/Detection_From_RealTime.csv'
             codec = cv2.VideoWriter_fourcc(*'mp4v')
             resolution = (width, height)
@@ -414,7 +386,7 @@ def main():
                     
                     try: 
                         text, region, roi, boxes, scores, classes = ocr_it(image_np_with_detections, detections, detection_threshold, region_threshold)
-                        save_results(text, region, roi, boxes, scores, classes, csv_filename_RealTime, folderRealTime)
+                        save_results(text, region, roi, boxes, scores, classes, csv_filename_RealTime, outputfolderPaths["folderRealTime"])
                     except Exception as e:
                         print(e)
                     
@@ -433,12 +405,12 @@ def main():
         try:
             with st.spinner("Please Wait....."):
                 # Zip and download
-                zipObj = ZipFile(detectFromRealTimeFeedZipFile, 'w')
+                zipObj = ZipFile(ZipfilesPaths["detectFromRealTimeFeedZipFile"], 'w')
                 if zipObj is not None:
                     # Add multiple files to the zip
-                    files = os.listdir(folderRealTime)
+                    files = os.listdir(outputfolderPaths["folderRealTime"])
                     for filename in files:
-                        eachFile = os.path.join(folderRealTime, filename)
+                        eachFile = os.path.join(outputfolderPaths["folderRealTime"], filename)
                         zipObj.write(eachFile)
                     zipObj.close()
                     
@@ -446,13 +418,13 @@ def main():
             st.write("Error in Zip and Download")
             st.error(e)
         
-        with open(detectFromRealTimeFeedZipFile, 'rb') as f:
+        with open(ZipfilesPaths["detectFromRealTimeFeedZipFile"], 'rb') as f:
             st.sidebar.download_button('Download (.zip) Real Time Feed', f, file_name = 'RealTimeFeed.zip')
         
         #Print File Names
         try:
             st.sidebar.write(csv_filename_RealTime)
-            st.sidebar.write(csv_filename_RealTime)
+            st.sidebar.write(realTimeVideofilename)
             print("Real Time .cvs File Name: ", csv_filename_RealTime, "\n")
             print("Real Time .mp4 File Name: ", realTimeVideofilename, "\n")
         except:
@@ -461,6 +433,7 @@ def main():
        
     if choice == "Detect From Video File":
         
+        ######### Video File Upload #######################
         st.set_option('deprecation.showfileUploaderEncoding', False)
         stframe = st.empty()
         #video_file_buffer = st.sidebar.file_uploader("Upload a video", type = [ "mp4", "mov",'avi','asf', 'm4v' ])
@@ -470,10 +443,16 @@ def main():
         if not video_file_buffer:
             vid = cv2.VideoCapture(DEMO_VIDEO)
             tffile.name = DEMO_VIDEO
+            st.sidebar.markdown("**DEMO Video**")
+            st.sidebar.video(tffile.name)
         else:
             tffile.write(video_file_buffer.read())
             vid = cv2.VideoCapture(tffile.name)
-            
+            st.sidebar.markdown("**Uploaded Video**")
+            st.sidebar.video(tffile.name)
+        
+        ######### Capture Frame From Video ###############
+           
         width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
         #st.write(width)
         print("Width: ", width, "\n")
@@ -486,9 +465,10 @@ def main():
         
         #st.sidebar.markdown("## Output")
         #st.sidebar.text("Default/Uploaded Video")
-        st.sidebar.markdown("**Default/Uploaded Video**")
-        st.sidebar.video(tffile.name)
+        # st.sidebar.markdown("**Default/Uploaded Video**")
+        # st.sidebar.video(tffile.name)
         
+        ######### Dashboard Stuff #####################
         kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
         with kpi1:
@@ -512,6 +492,8 @@ def main():
         
         detect = st.checkbox("Detect/Stop")
         
+        ########### Detections And OCR #####################
+        
         if detect:
             #st.info("Detection in Progress....")
             
@@ -520,9 +502,9 @@ def main():
             fps = 0
             
             #filename = './output/Detection_From_Videos/{}.mp4'.format(uuid.uuid1())
-            videofilename = os.path.join(folderVideos, 'outVideoFile.mp4')
+            videofilename = os.path.join(outputfolderPaths["folderVideos"], 'outVideoFile.mp4')
             #videofilename = './output/Detection_From_Videos/outVideoFile.mp4'
-            csv_filename_Video = os.path.join(folderVideos, 'Detection_From_Videos.csv')
+            csv_filename_Video = os.path.join(outputfolderPaths["folderVideos"], 'Detection_From_Videos.csv')
             #csv_filename_Video = './output/Detection_From_Videos/Detection_From_Videos.csv'
             codec = cv2.VideoWriter_fourcc(*'mp4v')
             resolution = (width, height)
@@ -546,7 +528,7 @@ def main():
                     
                     try: 
                         text, region, roi, boxes, scores, classes = ocr_it(image_np_with_detections, detections, detection_threshold, region_threshold)
-                        save_results(text, region, roi, boxes, scores, classes, csv_filename_Video, folderVideos)
+                        save_results(text, region, roi, boxes, scores, classes, csv_filename_Video, outputfolderPaths["folderVideos"])
                     except Exception as e:
                         print(e)
                         # vid.release()
@@ -575,12 +557,12 @@ def main():
         try:
             with st.spinner("Please Wait....."):
                 # Zip and download
-                zipObj = ZipFile(detectFromVideosZipFile, 'w')
+                zipObj = ZipFile(ZipfilesPaths["detectFromVideosZipFile"], 'w')
                 if zipObj is not None:
                     # Add multiple files to the zip
-                    files = os.listdir(folderVideos)
+                    files = os.listdir(outputfolderPaths["folderVideos"])
                     for filename in files:
-                        eachFile = os.path.join(folderVideos, filename)
+                        eachFile = os.path.join(outputfolderPaths["folderVideos"], filename)
                         zipObj.write(eachFile)
                     zipObj.close()
                     
@@ -588,7 +570,7 @@ def main():
             st.write("Error in Zip and Download")
             st.error(e)
         
-        with open(detectFromVideosZipFile, 'rb') as f:
+        with open(ZipfilesPaths["detectFromVideosZipFile"], 'rb') as f:
             st.download_button('Download (.zip) Video2Text', f, file_name = 'DetectionFromVideos.zip')
                 
         #Print File Names
@@ -599,6 +581,8 @@ def main():
             print("Video .mp4 File Name: ", videofilename, "\n")
         except:
             pass
+    
+    
             
     print("END ............................................................................")
           
