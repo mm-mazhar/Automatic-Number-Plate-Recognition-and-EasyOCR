@@ -1,0 +1,14 @@
+*vscode/
+*__pycache__
+*.ipynb_checkpoints
+*dataset
+*Tensorflow
+*envODEasyOCR
+*envProject
+
+
+car-plate-detection.zip
+models.tar.gz
+COLAB_Requirements.txt
+.dockerignore
+2.ColabANPR_and_EasyOCR.ipynb
