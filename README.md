@@ -1,5 +1,10 @@
 # Automatic Number Plate Recognition and EasyOCR
 
+## Step 0: Environment Setup
+
+- `conda create -n tfobjdetection pip python=3.9`
+- `conda activate tfobjdetection`
+- `pip install --ignore-installed --upgrade tensorflow==2.11.0`
 
 ## Step 1: Download Kaggle Dataset
 
@@ -16,7 +21,7 @@
 - Upload file `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in Google Colaboratory
 - Remember to Upload `archive.tar` file of prepared dataset in the step 2 when running `ANPR_and_EasyOCR_ColabRun_v1.ipynb` in the directory `Tensorflow/workspace/images`
 - Note down the latest checkpoint in the folder `Tensorflow\workspace\models\CUSTOM_MODEL_NAME\` e.g. `ckpt-100`. This will be required to enter in scripts `3.DetectFromImage_EasyOCR.py`, `4.DetectFromRealTimeFeed_EasyOCR.py`, `5.DetectFromVideos_EasyOCR.py`, `app.py` where `LOAD_CHECKPOINT = 'ckpt-101'`
-- Download the compressed file of trained model in the project folder and uncompress it multiple times.
+- Afer training, Download the compressed file of trained model in the project folder and uncompress it.
 - Note: `3.DetectFromImage_EasyOCR.py`, `4.DetectFromRealTimeFeed_EasyOCR.py`, `5.DetectFromVideos_EasyOCR.py` these are optional files.
  
 ## Step 4: Run the Streamlit UI
@@ -31,4 +36,7 @@
    <td><img src="https://i.imgur.com/rhOMFNk.png" width="500px" height=150px/></td>
    </tr>
 </table>
+
+## Download Trained Model
+- [Trained Model](https://1drv.ms/u/s!AtyOj2mfb9L6pFVGa1l5BX2uqerK?e=zaiCMd)
  
