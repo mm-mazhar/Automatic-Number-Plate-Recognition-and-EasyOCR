@@ -41,5 +41,5 @@
 - [Trained Model](https://1drv.ms/u/s!AtyOj2mfb9L6pFVGa1l5BX2uqerK?e=zaiCMd)
 
 ## See Streamlit App and Object Detection Installation
-  -[Streamlit App](https://github.com/mazqoty/Tensorflow-Object-Detection-Installation-and-ANPReasyOCR-Streamlit-App)
+  - [Streamlit App](https://github.com/mazqoty/Tensorflow-Object-Detection-Installation-and-ANPReasyOCR-Streamlit-App)
  
